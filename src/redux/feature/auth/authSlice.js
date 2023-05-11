@@ -36,9 +36,12 @@ export const register = createAsyncThunk(
 // Login
 export const login = createAsyncThunk(
   "auth/login",
-  async (userData, { rejectWithValue }) => {
+  async ({userData, message, navigate}, { rejectWithValue }) => {
     try {
       const res = await authServices.login(userData);
+      console.log(res.data);
+      message.success(`Welcome ${res.data?.name}`);
+      navigate("/");
       return res.data;
     } catch (error) {
       const message =

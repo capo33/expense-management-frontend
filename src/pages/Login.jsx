@@ -1,45 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import { Form, Input, message } from "antd";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Spinner from "../components/Spinner/Spinner";
+import { clearState, login } from "../redux/feature/auth/authSlice";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const { user, isLoading } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //from submit
-  const submitHandler = async (values) => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
-        values
-      );
-       setLoading(false);
-      message.success("login success");
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...data })
-      );
-      navigate("/");
-    } catch (error) {
-      setLoading(false);
-      message.error(error.response.data.message );
-    }
-  };
-
+  useEffect(() => {
+    dispatch(clearState());
+  }, [user, dispatch]);
+  
   //prevent for login user
   useEffect(() => {
     if (localStorage.getItem("user")) {
       navigate("/");
     }
   }, [navigate]);
+
+  //from submit
+  const submitHandler = async (values) => {
+    try {
+      dispatch(login({ userData: values, message ,navigate}));
+     } catch (error) {
+      message.error(error.response.data.message);
+    }
+  };
+
   return (
     <>
       <div className='resgister-page '>
-        {loading && <Spinner />}
+        {isLoading && <Spinner />}
         <Form layout='vertical' onFinish={submitHandler}>
           <h1>Login Form</h1>
 
