@@ -15,19 +15,17 @@ const Login = () => {
   useEffect(() => {
     dispatch(clearState());
   }, [user, dispatch]);
-  
+
   //prevent for login user
-  useEffect(() => {
-    if (localStorage.getItem("user")) {
-      navigate("/");
-    }
-  }, [navigate]);
+
+ 
 
   //from submit
   const submitHandler = async (values) => {
     try {
-      dispatch(login({ userData: values, message ,navigate}));
-     } catch (error) {
+      dispatch(login({ userData: values, message, navigate }));
+      // navigate("/");
+    } catch (error) {
       message.error(error.response.data.message);
     }
   };

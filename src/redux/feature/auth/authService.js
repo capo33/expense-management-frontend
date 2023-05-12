@@ -22,7 +22,7 @@ const login = async (userData) => {
 };
 
 // Logout
-const logout = async() => {
+const logout = () => {
   localStorage.removeItem("user");
 };
 

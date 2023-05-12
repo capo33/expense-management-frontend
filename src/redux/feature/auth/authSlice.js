@@ -31,12 +31,12 @@ export const register = createAsyncThunk(
       return rejectWithValue(message);
     }
   }
-);
+  );
 
 // Login
 export const login = createAsyncThunk(
   "auth/login",
-  async ({userData, message, navigate}, { rejectWithValue }) => {
+  async ({ userData, message , navigate}, { rejectWithValue }) => {
     try {
       const res = await authServices.login(userData);
       console.log(res.data);
@@ -44,20 +44,19 @@ export const login = createAsyncThunk(
       navigate("/");
       return res.data;
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
+      message.error(error.response.data.message);
+      const msg =
+        (error.response && error.response.data && error.response.data.msg) ||
+        error.msg ||
         error.toString();
-      return rejectWithValue(message);
+      return rejectWithValue(msg);
     }
   }
 );
 
 // Logout
 export const logout = createAsyncThunk("auth/logout", async () => {
-  await authServices.logout();
+   authServices.logout();
 });
 
 // Auth slice¨
@@ -112,11 +111,11 @@ const authSlice = createSlice({
       state.isSuccess = true;
       state.user = null;
     });
-    builder.addCase(logout.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = payload;
-    });
+    // builder.addCase(logout.rejected, (state, { payload }) => {
+    //   state.isLoading = false;
+    //   state.isError = true;
+    //   state.message = payload;
+    // });
   },
 });
 
